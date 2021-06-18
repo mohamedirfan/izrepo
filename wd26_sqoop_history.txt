@@ -1,0 +1,72 @@
+ 1032  sqoop import --connect jdbc:mysql://127.0.0.1/custdb --username root --password Root123$ -table customer -m 1 --target-dir incrimport --incremental append --check-column custid --last-value 6 --driver com.mysql.cj.jdbc.Driver;
+ 1033  hadoop fs -cat incrimport/*
+ 1034  hadoop fs -ls incrimport/*
+ 1035  date
+ 1036  sqoop import --connect jdbc:mysql://127.0.0.1/custdb --username root --password root --table customer_lastmodified -m 1 --target-dir incrimportlm --incremental lastmodified --check-column upddt --last-value 2018-10-10 --driver com.mysql.cj.jdbc.Driver;
+ 1037  sqoop import --connect jdbc:mysql://127.0.0.1/custdb --username root --password Root123$ --table customer_lastmodified -m 1 --target-dir incrimportlm --incremental lastmodified --check-column upddt --last-value 2018-10-10 --driver com.mysql.cj.jdbc.Driver;
+ 1038  insert into customer_lastmodified values(9,'inceptez1','tech','hyd',3,'2017-09-28',10000,'2018-10-11');
+ 1039  update customer_lastmodified set upddt='2018-10-11',city='Chennai' where custid =4;
+ 1040  sqoop import --connect jdbc:mysql://127.0.0.1/custdb --username root --password root --table customer_lastmodified -m 1 --target-dir incrimportlm --incremental lastmodified --check-column upddt --last-value 2018-10-11 --append --driver com.mysql.cj.jdbc.Driver;
+ 1041  sqoop import --connect jdbc:mysql://127.0.0.1/custdb --username root --password Root123$ --table customer_lastmodified -m 1 --target-dir incrimportlm --incremental lastmodified --check-column upddt --last-value 2018-10-11 --append --driver com.mysql.cj.jdbc.Driver;
+ 1042  hadoop fs -ls incrimportlm
+ 1043  hadoop fs -cat incrimportlm/*
+ 1044  sqoop import --connect jdbc:mysql://127.0.0.1/custdb --username root --password root -table customer_lastmodified -m 1 --target-dir incrimportlm --incremental lastmodified --check-column upddt --last-value 2018-10-12 --merge-key custid --driver com.mysql.cj.jdbc.Driver;
+ 1045  sqoop import --connect jdbc:mysql://127.0.0.1/custdb --username root --password Root123$ -table customer_lastmodified -m 1 --target-dir incrimportlm --incremental lastmodified --check-column upddt --last-value 2018-10-12 --merge-key custid --driver com.mysql.cj.jdbc.Driver;
+ 1046  hadoop fs -cat incrimportlm/*
+ 1047  spark-shell --num-executors 2 --executor-cores 1 --executor-memory 1g --master yarn --deploy-mode client
+ 1048  df -kh .
+ 1049  hadoop fs -cat savedjob1/*
+ 1050  2,srini,chennai,vasan,33,2017-09-21,10000
+ 1051  hadoop fs -cat imp_del/*
+ 1052  hadoop fs -ls imp_del
+ 1053  hadoop fs -cat imp_del/part-m-00000
+ 1054  hadoop fs -cat imp_del1/part-m-0000*
+ 1055  hadoop fs -cat savedjob1/part-m-0000*
+ 1056  sqoop export --connect jdbc:mysql://localhost/custdb --username root --password Root123$ --table customer_hdfs --export-dir imp_del --fields-terminated-by '~' --lines-terminated-by '\n' --driver com.mysql.cj.jdbc.Driver;
+ 1057  sqoop codegen
+ 1058  sqoop eval --connect jdbc:mysql://localhost/custdb --username root --password Root123$ --query "delete from sample"
+ 1059  hadoop fs -cat custidtodelete/*
+ 1060  hadoop fs -ls incrimport
+ 1061  hadoop fs -rm incrimport/part-m-00002
+ 1062  hadoop fs -rm incrimport/part-m-00003
+ 1063  hadoop fs -cat incrimport/part-m-00000
+ 1064  hadoop fs -cat incrimport/part-m-00001
+ 1065  hadoop fs -cat incrimport/part-m-0000*
+ 1066  sqoop import --connect jdbc:mysql://localhost/custdb --username root --password Root123$ -table customer -m 1 --target-dir incrimport --incremental append --check-column city --last-value 'pune' --driver com.mysql.cj.jdbc.Driver
+ 1067  hadoop fs -rm incrimport
+ 1068  hadoop fs -rmr incrimport
+ 1069  sqoop import --connect jdbc:mysql://localhost/custdb --username root --password Root123$ -table customer -m 1 --target-dir incrimport --incremental append --check-column custid --last-value 0 --driver com.mysql.cj.jdbc.Driver
+ 1070  sqoop import --connect jdbc:mysql://localhost/custdb --username root --password Root123$ -table customer -m 1 --target-dir incrimport --incremental append --check-column custid --last-value 6 --driver com.mysql.cj.jdbc.Driver
+ 1071  hadoop fs -cat incrimport/part-m-0000*
+ 1072  sqoop job -list
+ 1073  sqoop job --delete myjob1
+ 1074  sqoop job --delete myjob2
+ 1075  hadoop fs -rmr incrimport
+ 1076  sqoop job --create myjob2 -- import --connect jdbc:mysql://localhost/custdb --username root --password Root123$ -table customer -m 1 --target-dir savedjob1 --incremental append --check-column custid --last-value 0 --driver com.mysql.cj.jdbc.Driver
+ 1077  hadoop fs -rmr savedjob1
+ 1078  sqoop job --exec myjob2
+ 1079  hadoop fs -cat savedjob1/*
+ 1080  sqoop job --exec myjob2
+ 1081  hadoop fs -cat savedjob1/*
+ 1082  cd ~/.sqoop
+ 1083  pwd
+ 1084  vi metastore.db.script
+ 1085  sqoop job --exec myjob2
+ 1086  hadoop fs -cat savedjob1/*
+ 1087  hadoop fs -ls savedjob1/*
+ 1088  vi metastore.db.script
+ 1089  pwd
+ 1090  vi metastore.db.script
+ 1091  pwd
+ 1092  hadoop fs -rm savedjob1/part-m-00002
+ 1093  sqoop job --exec myjob2
+ 1094  vi metastore.db.script 
+ 1095  sqoop job --exec myjob2
+ 1096  hadoop fs -cat savedjob1/*
+ 1097  sqoop job --create myjob1 -- import --connect jdbc:mysql://localhost/custdb --username root --password Root123$ --table customer --target-dir savedjob --delete-target-dir -m 1 --driver com.mysql.cj.jdbc.Driver
+ 1098* 
+ 1099  sqoop import --connect jdbc:mysql://localhost/custdb --username root --password Root123$ -table customer_incupd -m 1 --target-dir /user/hduser/incrupdimport --incremental lastmodifie --check-column upddt --last-value 2021-05-31 --driver com.mysql.cj.jdbc.Driver
+ 1100* sqoop import --connect jdbc:mysql://localhost/custdb --username root --password Root123$ -table customer_incupd -m 1 --target-dir /user/hduser/incrupdimport --incremental lastmodified --check-column upddt --last-value 2021-06-01 --driver com.mysql.cj.jdbc.Driver
+ 1101  sqoop import --connect jdbc:mysql://localhost/custdb --username root --password Root123$ -table customer_incupd -m 1 --target-dir /user/hduser/incrupdimport --incremental lastmodified --check-column upddt --last-value 2021-06-01 --driver com.mysql.cj.jdbc.Driver 
+ 1102  sqoop import --connect jdbc:mysql://localhost/custdb --username root --password Root123$ -table customer_incupd -m 1 --target-dir /user/hduser/incrupdimport --incremental lastmodified --check-column upddt --last-value 2021-06-01 --driver com.mysql.cj.jdbc.Driver --append
+ 1103  history > wd26_sqoop_history.txt
