@@ -1,0 +1,22 @@
+Medical Record Text Analytics
+
+
+
+
+Users = load 'users' as (name, age);
+Fltrd = filter Users by age >= 18 and age <= 25;
+Pages = load 'pages' as (user, url);
+Jnd = join Fltrd by name, Pages by user;
+Grpd = group Jnd by url;
+Smmd = foreach Grpd generate group, COUNT(Jnd) as clicks;
+Srtd = order Smmd by clicks desc;
+sampl = sample Srtd 0.1;
+Top5 = limit Srtd 5;
+store Top5 into 'top5sites';
+
+
+
+
+
+sqoop import --connect jdbc:mysql://localhost:3306/ydb --table yloc --username root -P   --check-column rDate --incremental lastmodified --last-value 2014-01-25 --target-dir yloc/loc
+
